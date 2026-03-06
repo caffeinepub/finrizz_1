@@ -5,8 +5,8 @@ import { Outlet, useLocation } from "@tanstack/react-router";
 export default function RootLayout() {
   const { identity } = useInternetIdentity();
   const location = useLocation();
-  const isLanding = location.pathname === "/";
-  const showNavbar = !!identity && !isLanding;
+  const isAuthPage = ["/", "/signin", "/signup"].includes(location.pathname);
+  const showNavbar = !!identity && !isAuthPage;
 
   return (
     <div className="min-h-screen navy-grid bg-background">

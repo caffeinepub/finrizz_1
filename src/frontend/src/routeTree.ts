@@ -11,6 +11,8 @@ import InvestmentsPage from "./pages/InvestmentsPage";
 import LandingPage from "./pages/LandingPage";
 import LoanEligibilityPage from "./pages/LoanEligibilityPage";
 import PaymentsPage from "./pages/PaymentsPage";
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
 import SubscriptionsPage from "./pages/SubscriptionsPage";
 
 const rootRoute = createRootRoute({ component: RootLayout });
@@ -63,6 +65,18 @@ const paymentsRoute = createRoute({
   component: PaymentsPage,
 });
 
+const signInRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/signin",
+  component: SignInPage,
+});
+
+const signUpRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/signup",
+  component: SignUpPage,
+});
+
 export const routeTree = rootRoute.addChildren([
   landingRoute,
   dashboardRoute,
@@ -72,6 +86,8 @@ export const routeTree = rootRoute.addChildren([
   loanRoute,
   subscriptionsRoute,
   paymentsRoute,
+  signInRoute,
+  signUpRoute,
 ]);
 
 export type Router = ReturnType<typeof createRouter<typeof routeTree>>;
