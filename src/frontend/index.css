@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Font Faces ─────────────────────────────────────────────── */
+@font-face {
+  font-family: "Sora";
+  src: url("/assets/fonts/Sora.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/assets/fonts/CabinetGrotesk.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  /* ─── FinRizz Dark Fintech Theme ───────────────────────────── */
+  :root {
+    --radius: 0.75rem;
+
+    /* Background: deep navy */
+    --background: 0.11 0.025 258;
+    /* Foreground: crisp white */
+    --foreground: 0.97 0.005 258;
+
+    /* Card: slightly lighter navy */
+    --card: 0.15 0.03 258;
+    --card-foreground: 0.97 0.005 258;
+
+    /* Popover */
+    --popover: 0.13 0.025 258;
+    --popover-foreground: 0.97 0.005 258;
+
+    /* Primary: electric teal */
+    --primary: 0.6 0.14 185;
+    --primary-foreground: 0.08 0.015 258;
+
+    /* Secondary: muted navy */
+    --secondary: 0.18 0.03 258;
+    --secondary-foreground: 0.85 0.01 258;
+
+    /* Muted */
+    --muted: 0.18 0.025 258;
+    --muted-foreground: 0.55 0.03 258;
+
+    /* Accent: bright teal glow */
+    --accent: 0.65 0.16 185;
+    --accent-foreground: 0.08 0.015 258;
+
+    /* Destructive */
+    --destructive: 0.62 0.22 25;
+    --destructive-foreground: 0.97 0 0;
+
+    /* Border: subtle navy edge */
+    --border: 0.25 0.04 258;
+    --input: 0.22 0.035 258;
+    --ring: 0.6 0.14 185;
+
+    /* Charts: teal palette */
+    --chart-1: 0.62 0.15 185;
+    --chart-2: 0.55 0.18 230;
+    --chart-3: 0.72 0.17 145;
+    --chart-4: 0.7 0.18 55;
+    --chart-5: 0.65 0.2 20;
+
+    /* Sidebar */
+    --sidebar: 0.09 0.02 258;
+    --sidebar-foreground: 0.97 0.005 258;
+    --sidebar-primary: 0.6 0.14 185;
+    --sidebar-primary-foreground: 0.08 0.015 258;
+    --sidebar-accent: 0.18 0.03 258;
+    --sidebar-accent-foreground: 0.85 0.01 258;
+    --sidebar-border: 0.22 0.035 258;
+    --sidebar-ring: 0.6 0.14 185;
+
+    /* FinRizz custom tokens */
+    --finrizz-navy: 0.09 0.025 258;
+    --finrizz-navy-mid: 0.13 0.03 258;
+    --finrizz-teal: 0.62 0.15 185;
+    --finrizz-teal-bright: 0.72 0.18 185;
+    --finrizz-glow: 0.62 0.15 185;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Sora", "Cabinet Grotesk", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Cabinet Grotesk", "Sora", system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Teal glow effect */
+  .glow-teal {
+    box-shadow: 0 0 20px oklch(0.62 0.15 185 / 0.3), 0 0 40px oklch(0.62 0.15 185 / 0.15);
+  }
+
+  .glow-teal-sm {
+    box-shadow: 0 0 10px oklch(0.62 0.15 185 / 0.25);
+  }
+
+  /* Glass card */
+  .glass-card {
+    background: oklch(0.15 0.03 258 / 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid oklch(0.3 0.05 258 / 0.4);
+  }
+
+  /* Navy grid background */
+  .navy-grid {
+    background-image: 
+      linear-gradient(oklch(0.62 0.15 185 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.62 0.15 185 / 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Teal gradient text */
+  .text-gradient-teal {
+    background: linear-gradient(135deg, oklch(0.72 0.18 185), oklch(0.6 0.14 210));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Amount display */
+  .amount-display {
+    font-family: "Cabinet Grotesk", system-ui, sans-serif;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+}
