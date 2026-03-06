@@ -54,6 +54,7 @@ export default function InvestmentsPage() {
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
           className="mb-8"
         >
           <h1 className="font-display text-3xl font-extrabold text-foreground">
@@ -134,7 +135,7 @@ export default function InvestmentsPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="rounded-2xl border border-border bg-card p-5 shadow-card"
+                className="bank-card rounded-2xl p-5"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="font-display text-base font-bold text-foreground">
@@ -172,7 +173,7 @@ export default function InvestmentsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               data-ocid="investments.history.list"
-              className="rounded-2xl border border-border bg-card p-5 shadow-card"
+              className="bank-card rounded-2xl p-5"
             >
               <div className="mb-5 flex items-center gap-2">
                 <Clock className="h-5 w-5 text-muted-foreground" />
@@ -189,8 +190,11 @@ export default function InvestmentsPage() {
                   <Skeleton className="h-14 w-full rounded-xl" />
                 </div>
               ) : !history?.length ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="mb-3 rounded-2xl bg-muted p-4">
+                <div
+                  data-ocid="investments.history.empty_state"
+                  className="flex flex-col items-center justify-center py-12 text-center"
+                >
+                  <div className="mb-3 rounded-2xl bg-muted/60 p-4">
                     <TrendingUp className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <p className="text-sm font-medium text-foreground">
@@ -208,10 +212,10 @@ export default function InvestmentsPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      className="flex items-center justify-between rounded-xl border border-border bg-secondary/40 px-4 py-3"
+                      className="flex items-center justify-between rounded-xl border border-border bg-secondary/30 px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="rounded-lg bg-primary/15 p-2">
+                        <div className="rounded-lg bg-primary/12 p-2">
                           <TrendingUp className="h-4 w-4 text-primary" />
                         </div>
                         <div>
@@ -240,7 +244,7 @@ export default function InvestmentsPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
-              className="rounded-xl border border-border bg-secondary/30 p-5"
+              className="rounded-xl border border-border bg-secondary/20 p-5"
             >
               <h3 className="mb-3 text-sm font-bold text-foreground">
                 How Roundup Investing Works
@@ -264,7 +268,7 @@ export default function InvestmentsPage() {
                   },
                 ].map(({ step, title, desc }) => (
                   <div key={step} className="flex gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
                       {step}
                     </span>
                     <div>

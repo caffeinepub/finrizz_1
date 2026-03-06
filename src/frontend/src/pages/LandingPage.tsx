@@ -1,8 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { useInternetIdentity } from "@/hooks/useInternetIdentity";
 import { useNavigate } from "@tanstack/react-router";
-import { Loader2, PieChart, Shield, TrendingUp, Zap } from "lucide-react";
-import { motion } from "motion/react";
+import {
+  BarChart3,
+  CreditCard,
+  Loader2,
+  PieChart,
+  Receipt,
+  Shield,
+  TrendingUp,
+  Zap,
+} from "lucide-react";
+import { type Variants, motion } from "motion/react";
 import { useEffect } from "react";
 
 const features = [
@@ -19,6 +28,18 @@ const features = [
       "Every transaction automatically rounds up and invests the spare change into your portfolio.",
   },
   {
+    icon: CreditCard,
+    title: "Loan Eligibility",
+    description:
+      "Instant loan eligibility calculator with credit score analysis and EMI estimation.",
+  },
+  {
+    icon: Receipt,
+    title: "Bills & Payments",
+    description:
+      "Track EMI payments, electricity bills, and detect zombie subscriptions draining your wallet.",
+  },
+  {
     icon: Zap,
     title: "Real-Time Insights",
     description:
@@ -32,17 +53,17 @@ const features = [
   },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45 } },
 };
 
 export default function LandingPage() {
@@ -67,17 +88,25 @@ export default function LandingPage() {
           backgroundPosition: "center",
         }}
       />
-      <div className="absolute inset-0 z-0 bg-background/70" />
+      <div className="absolute inset-0 z-0 bg-background/88" />
+      {/* Subtle radial glow */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 50% at 50% 0%, oklch(0.52 0.13 220 / 0.06) 0%, transparent 70%)",
+        }}
+      />
 
       {/* Content */}
       <div className="relative z-10">
         {/* Header */}
-        <header className="flex items-center justify-between px-6 py-5 sm:px-10">
+        <header className="flex items-center justify-between border-b border-border/40 px-6 py-4 backdrop-blur-sm sm:px-10">
           <div className="flex items-center gap-2.5">
             <img
-              src="/assets/generated/finrizz-logo-transparent.dim_120x120.png"
+              src="/assets/uploads/WhatsApp-Image-2026-03-07-at-2.12.33-AM-1.jpeg"
               alt="FinRizz"
-              className="h-9 w-9"
+              className="h-9 w-9 rounded-full object-cover"
             />
             <span className="font-display text-2xl font-extrabold tracking-tight">
               <span className="text-gradient-teal">Fin</span>
@@ -89,8 +118,11 @@ export default function LandingPage() {
             size="sm"
             onClick={login}
             disabled={isLoggingIn || isInitializing}
-            className="border-primary/40 text-primary hover:bg-primary/10"
+            className="border-border/60 text-foreground hover:border-primary/50 hover:bg-primary/8 hover:text-primary"
           >
+            {isLoggingIn || isInitializing ? (
+              <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+            ) : null}
             Sign In
           </Button>
         </header>
@@ -103,8 +135,8 @@ export default function LandingPage() {
           animate="visible"
         >
           <motion.div variants={itemVariants}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary">
-              <Zap className="h-3 w-3" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/8 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary">
+              <BarChart3 className="h-3 w-3" />
               AI-Powered Finance Platform
             </span>
           </motion.div>
@@ -123,8 +155,8 @@ export default function LandingPage() {
             className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground"
           >
             FinRizz is your AI-powered finance assistant — track every rupee,
-            invest your spare change automatically, and unlock intelligent
-            insights about your financial future.
+            invest your spare change automatically, manage loans and bills, and
+            unlock intelligent insights about your financial future.
           </motion.p>
 
           <motion.div
@@ -136,7 +168,7 @@ export default function LandingPage() {
               onClick={login}
               disabled={isLoggingIn || isInitializing}
               data-ocid="landing.login.primary_button"
-              className="h-14 gap-3 rounded-xl bg-primary px-8 text-base font-semibold text-primary-foreground shadow-teal hover:bg-primary/90 hover:shadow-teal-lg disabled:opacity-60"
+              className="h-12 gap-3 rounded-xl bg-primary px-8 text-base font-semibold text-primary-foreground shadow-teal hover:bg-primary/90 disabled:opacity-60"
             >
               {isLoggingIn || isInitializing ? (
                 <>
@@ -158,17 +190,14 @@ export default function LandingPage() {
           {/* Stats */}
           <motion.div
             variants={itemVariants}
-            className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-6"
+            className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-4"
           >
             {[
               { label: "Avg. Monthly Savings", value: "₹2,400" },
               { label: "Roundup Investments", value: "100% Auto" },
               { label: "AI Advice Accuracy", value: "94.7%" },
             ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-2xl border border-border bg-card/50 p-4 backdrop-blur-sm"
-              >
+              <div key={stat.label} className="bank-card rounded-2xl p-4">
                 <p className="amount-display text-2xl font-extrabold text-foreground sm:text-3xl">
                   {stat.value}
                 </p>
@@ -183,7 +212,22 @@ export default function LandingPage() {
         {/* Features Grid */}
         <section className="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
           <motion.div
-            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-10 text-center"
+          >
+            <h2 className="font-display text-2xl font-extrabold text-foreground sm:text-3xl">
+              Everything you need to manage your finances
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Professional-grade tools, simplified for everyone
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -193,10 +237,10 @@ export default function LandingPage() {
               <motion.div
                 key={title}
                 variants={itemVariants}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="glass-card rounded-2xl p-6"
+                whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                className="bank-card rounded-2xl p-6"
               >
-                <div className="mb-4 inline-flex rounded-xl bg-primary/15 p-3">
+                <div className="mb-4 inline-flex rounded-xl bg-primary/12 p-3">
                   <Icon className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="font-display text-base font-bold text-foreground">

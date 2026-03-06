@@ -13,7 +13,7 @@ interface InvestmentCardProps {
 
 const variantStyles = {
   default: "border-border bg-card",
-  teal: "border-primary/40 bg-primary/10 glow-teal-sm",
+  teal: "border-primary/30 bg-primary/8 shadow-bank",
   muted: "border-border bg-secondary/40",
 };
 

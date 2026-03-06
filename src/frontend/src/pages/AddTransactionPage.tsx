@@ -94,7 +94,8 @@ export default function AddTransactionPage() {
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => void navigate({ to: "/dashboard" })}
-          className="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          data-ocid="add_transaction.back.button"
+          className="mb-6 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -103,7 +104,8 @@ export default function AddTransactionPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-8"
+          transition={{ duration: 0.4 }}
+          className="bank-card rounded-2xl p-6 sm:p-8"
         >
           {/* Title */}
           <div className="mb-7">
@@ -120,10 +122,11 @@ export default function AddTransactionPage() {
             {result && (
               <motion.div
                 data-ocid="add_transaction.success_state"
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="mb-6 rounded-xl border border-primary/40 bg-primary/10 p-4"
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.25 }}
+                className="mb-6 rounded-xl border border-primary/35 bg-primary/8 p-4"
               >
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
@@ -283,8 +286,8 @@ export default function AddTransactionPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="mt-5 rounded-xl border border-border bg-secondary/40 p-4"
+          transition={{ delay: 0.18 }}
+          className="mt-5 rounded-xl border border-border bg-secondary/30 p-4"
         >
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             How Roundup Investing Works

@@ -43,7 +43,7 @@ const CustomBarTooltip = ({
 }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-border bg-card px-4 py-3 shadow-card">
+    <div className="bank-card rounded-xl px-4 py-3">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
       <p className="amount-display mt-0.5 text-lg font-bold text-primary">
         ₹{payload[0].value.toLocaleString("en-IN")}
@@ -65,6 +65,7 @@ export default function InsightsPage() {
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
           className="mb-8"
         >
           <h1 className="font-display text-3xl font-extrabold text-foreground">
@@ -99,6 +100,17 @@ export default function InsightsPage() {
           </div>
         )}
 
+        {/* Skeleton while loading */}
+        {isLoading && (
+          <div className="flex flex-col gap-6">
+            <Skeleton className="h-28 rounded-2xl" />
+            <div className="grid gap-6 lg:grid-cols-2">
+              <Skeleton className="h-80 rounded-2xl" />
+              <Skeleton className="h-80 rounded-2xl" />
+            </div>
+          </div>
+        )}
+
         {!isLoading && analysis && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -111,10 +123,11 @@ export default function InsightsPage() {
               data-ocid="insights.advice.card"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border border-primary/40 bg-primary/10 p-6 shadow-card glow-teal-sm"
+              transition={{ duration: 0.4 }}
+              className="rounded-2xl border border-primary/25 bg-primary/6 p-6 shadow-bank"
             >
               <div className="flex items-start gap-4">
-                <div className="rounded-xl bg-primary/20 p-3">
+                <div className="rounded-xl bg-primary/15 p-3">
                   <Lightbulb className="h-6 w-6 text-primary" />
                 </div>
                 <div>
@@ -136,7 +149,7 @@ export default function InsightsPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="rounded-2xl border border-border bg-card p-5 shadow-card"
+                className="bank-card rounded-2xl p-5"
               >
                 <h2 className="mb-4 font-display text-lg font-bold text-foreground">
                   Spending by Category
@@ -157,7 +170,7 @@ export default function InsightsPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="rounded-2xl border border-border bg-card p-5 shadow-card"
+                className="bank-card rounded-2xl p-5"
               >
                 <h2 className="mb-4 font-display text-lg font-bold text-foreground">
                   Monthly Spending
@@ -170,13 +183,13 @@ export default function InsightsPage() {
                     >
                       <CartesianGrid
                         strokeDasharray="3 3"
-                        stroke="oklch(0.25 0.04 258)"
+                        stroke="#e5e7eb"
                         vertical={false}
                       />
                       <XAxis
                         dataKey="month"
                         tick={{
-                          fill: "oklch(0.55 0.03 258)",
+                          fill: "#64748b",
                           fontSize: 11,
                         }}
                         axisLine={false}
@@ -184,7 +197,7 @@ export default function InsightsPage() {
                       />
                       <YAxis
                         tick={{
-                          fill: "oklch(0.55 0.03 258)",
+                          fill: "#64748b",
                           fontSize: 11,
                         }}
                         axisLine={false}
@@ -194,7 +207,7 @@ export default function InsightsPage() {
                       <Tooltip content={<CustomBarTooltip />} />
                       <Bar
                         dataKey="total"
-                        fill="oklch(0.62 0.15 185)"
+                        fill="#3b82f6"
                         radius={[6, 6, 0, 0]}
                       />
                     </BarChart>
@@ -216,7 +229,7 @@ export default function InsightsPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="rounded-2xl border border-border bg-card p-5 shadow-card"
+                className="bank-card rounded-2xl p-5"
               >
                 <h2 className="mb-5 font-display text-lg font-bold text-foreground">
                   Category Breakdown
@@ -256,12 +269,16 @@ export default function InsightsPage() {
                             </div>
                           </div>
                           <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
-                            <div
-                              className="h-full rounded-full transition-all duration-700"
-                              style={{
-                                width: `${pct}%`,
-                                background: color,
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${pct}%` }}
+                              transition={{
+                                duration: 0.8,
+                                ease: "easeOut",
+                                delay: i * 0.05,
                               }}
+                              className="h-full rounded-full"
+                              style={{ background: color }}
                             />
                           </div>
                         </div>

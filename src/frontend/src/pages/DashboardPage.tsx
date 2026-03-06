@@ -5,50 +5,89 @@ import TransactionCard from "@/components/app/TransactionCard";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useActor } from "@/hooks/useActor";
+import { useAnimatedCounter } from "@/hooks/useCounterAnimation";
 import { useInternetIdentity } from "@/hooks/useInternetIdentity";
 import {
   useExpenseAnalysis,
-  useInitializeSeedData,
   useTransactions,
   useWalletSummary,
 } from "@/hooks/useQueries";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
   AlertCircle,
+  ArrowRight,
+  CreditCard,
   DollarSign,
   PlusCircle,
+  Receipt,
   TrendingUp,
   Wallet,
+  Zap,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { type Variants, motion } from "motion/react";
 import { useEffect } from "react";
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08 },
+    transition: { staggerChildren: 0.07 },
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
 function SummaryCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
+    <div className="bank-card rounded-2xl p-5">
       <Skeleton className="mb-3 h-3 w-24" />
       <Skeleton className="h-9 w-36" />
     </div>
   );
 }
 
+function AnimatedAmount({
+  value,
+  decimals = 2,
+}: { value: number; decimals?: number }) {
+  const display = useAnimatedCounter({
+    target: value,
+    prefix: "₹",
+    decimals,
+    locale: "en-IN",
+  });
+  return <span>{display}</span>;
+}
+
+const quickActions = [
+  {
+    to: "/loan",
+    icon: CreditCard,
+    title: "Loan Eligibility",
+    description: "Check how much you qualify for",
+    ocid: "dashboard.loan.card",
+  },
+  {
+    to: "/subscriptions",
+    icon: Zap,
+    title: "Subscriptions",
+    description: "Detect zombie subs wasting money",
+    ocid: "dashboard.subscriptions.card",
+  },
+  {
+    to: "/payments",
+    icon: Receipt,
+    title: "Payments & EMI",
+    description: "Manage EMIs and utility bills",
+    ocid: "dashboard.payments.card",
+  },
+];
+
 export default function DashboardPage() {
   const { identity } = useInternetIdentity();
-  const { actor } = useActor();
   const navigate = useNavigate();
 
   const {
@@ -58,31 +97,18 @@ export default function DashboardPage() {
   } = useTransactions();
   const { data: wallet, isLoading: walletLoading } = useWalletSummary();
   const { data: analysis, isLoading: analysisLoading } = useExpenseAnalysis();
-  const { mutate: initSeedData, isPending: seeding } = useInitializeSeedData();
 
-  // Redirect to landing if not authenticated
   useEffect(() => {
     if (!identity) {
       void navigate({ to: "/" });
     }
   }, [identity, navigate]);
 
-  // Seed data on first login
-  useEffect(() => {
-    if (actor && !localStorage.getItem("finrizz_seeded")) {
-      initSeedData(undefined, {
-        onSuccess: () => {
-          localStorage.setItem("finrizz_seeded", "1");
-        },
-      });
-    }
-  }, [actor, initSeedData]);
-
   const totalSpending =
     transactions?.reduce((sum, tx) => sum + tx.amount, 0) ?? 0;
   const recentTransactions = transactions?.slice(0, 5) ?? [];
 
-  const isLoading = txLoading || walletLoading || analysisLoading || seeding;
+  const isLoading = txLoading || walletLoading || analysisLoading;
 
   return (
     <ProtectedRoute>
@@ -94,6 +120,7 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
           className="mb-8 flex items-center justify-between"
         >
           <div>
@@ -105,7 +132,10 @@ export default function DashboardPage() {
             </p>
           </div>
           <Link to="/add-transaction">
-            <Button className="gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">
+            <Button
+              data-ocid="dashboard.add_transaction.button"
+              className="gap-2 rounded-xl bg-primary text-primary-foreground shadow-teal hover:bg-primary/90"
+            >
               <PlusCircle className="h-4 w-4" />
               Add Transaction
             </Button>
@@ -114,7 +144,11 @@ export default function DashboardPage() {
 
         {/* Error */}
         {txError && (
-          <Alert variant="destructive" className="mb-6">
+          <Alert
+            variant="destructive"
+            className="mb-6"
+            data-ocid="dashboard.error_state"
+          >
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               Failed to load transactions. Please try again.
@@ -124,7 +158,7 @@ export default function DashboardPage() {
 
         {/* Summary Cards */}
         <motion.div
-          className="mb-8 grid gap-4 sm:grid-cols-3"
+          className="mb-6 grid gap-4 sm:grid-cols-3"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -141,8 +175,8 @@ export default function DashboardPage() {
               <motion.div
                 data-ocid="dashboard.spending.card"
                 variants={cardVariants}
-                whileHover={{ y: -3 }}
-                className="rounded-2xl border border-border bg-card p-5 shadow-card transition-shadow hover:shadow-card-hover"
+                whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                className="bank-card rounded-2xl p-5 transition-shadow hover:shadow-card-hover"
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -150,13 +184,13 @@ export default function DashboardPage() {
                       Total Spending
                     </p>
                     <p className="amount-display mt-2 text-3xl font-extrabold text-foreground">
-                      ₹{totalSpending.toLocaleString("en-IN")}
+                      <AnimatedAmount value={totalSpending} decimals={0} />
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
                       Across {transactions?.length ?? 0} transactions
                     </p>
                   </div>
-                  <div className="rounded-xl bg-orange-500/15 p-2.5">
+                  <div className="rounded-xl bg-orange-500/12 p-2.5">
                     <DollarSign className="h-5 w-5 text-orange-400" />
                   </div>
                 </div>
@@ -166,8 +200,8 @@ export default function DashboardPage() {
               <motion.div
                 data-ocid="dashboard.invested.card"
                 variants={cardVariants}
-                whileHover={{ y: -3 }}
-                className="rounded-2xl border border-primary/40 bg-primary/10 p-5 shadow-card glow-teal-sm transition-shadow hover:shadow-card-hover"
+                whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                className="rounded-2xl border border-primary/30 bg-primary/8 p-5 shadow-bank transition-shadow hover:shadow-card-hover"
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -175,16 +209,16 @@ export default function DashboardPage() {
                       Total Invested
                     </p>
                     <p className="amount-display mt-2 text-3xl font-extrabold text-primary">
-                      ₹
-                      {(wallet?.investedAmount ?? 0).toLocaleString("en-IN", {
-                        maximumFractionDigits: 2,
-                      })}
+                      <AnimatedAmount
+                        value={wallet?.investedAmount ?? 0}
+                        decimals={2}
+                      />
                     </p>
                     <p className="mt-1 text-xs text-primary/60">
                       80% of roundups
                     </p>
                   </div>
-                  <div className="rounded-xl bg-primary/20 p-2.5">
+                  <div className="rounded-xl bg-primary/15 p-2.5">
                     <TrendingUp className="h-5 w-5 text-primary" />
                   </div>
                 </div>
@@ -194,8 +228,8 @@ export default function DashboardPage() {
               <motion.div
                 data-ocid="dashboard.roundup.card"
                 variants={cardVariants}
-                whileHover={{ y: -3 }}
-                className="rounded-2xl border border-border bg-card p-5 shadow-card transition-shadow hover:shadow-card-hover"
+                whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                className="bank-card rounded-2xl p-5 transition-shadow hover:shadow-card-hover"
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -203,10 +237,10 @@ export default function DashboardPage() {
                       Roundup Balance
                     </p>
                     <p className="amount-display mt-2 text-3xl font-extrabold text-foreground">
-                      ₹
-                      {(wallet?.availableAmount ?? 0).toLocaleString("en-IN", {
-                        maximumFractionDigits: 2,
-                      })}
+                      <AnimatedAmount
+                        value={wallet?.availableAmount ?? 0}
+                        decimals={2}
+                      />
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
                       Available to invest
@@ -221,14 +255,59 @@ export default function DashboardPage() {
           )}
         </motion.div>
 
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18 }}
+          className="mb-6"
+        >
+          <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Quick Actions
+          </h2>
+          <motion.div
+            className="grid gap-3 sm:grid-cols-3"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {quickActions.map(
+              ({ to, icon: Icon, title, description, ocid }) => (
+                <motion.div key={to} variants={cardVariants}>
+                  <Link to={to}>
+                    <motion.div
+                      data-ocid={ocid}
+                      whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                      className="bank-card flex items-center gap-4 rounded-xl p-4 transition-shadow hover:shadow-card-hover hover:border-primary/30 cursor-pointer"
+                    >
+                      <div className="shrink-0 rounded-xl bg-primary/10 p-2.5">
+                        <Icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-foreground">
+                          {title}
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {description}
+                        </p>
+                      </div>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              ),
+            )}
+          </motion.div>
+        </motion.div>
+
         {/* Charts + Recent Transactions */}
         <div className="grid gap-6 lg:grid-cols-5">
           {/* Recent Transactions */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-border bg-card p-5 shadow-card lg:col-span-3"
+            transition={{ delay: 0.22 }}
+            className="bank-card rounded-2xl p-5 lg:col-span-3"
           >
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-display text-lg font-bold text-foreground">
@@ -236,21 +315,29 @@ export default function DashboardPage() {
               </h2>
               <Link
                 to="/add-transaction"
-                className="text-xs font-medium text-primary hover:underline"
+                data-ocid="dashboard.add_transaction.link"
+                className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
               >
-                + Add New
+                <PlusCircle className="h-3.5 w-3.5" />
+                Add New
               </Link>
             </div>
 
-            {txLoading || seeding ? (
-              <div className="flex flex-col gap-3">
+            {txLoading ? (
+              <div
+                className="flex flex-col gap-3"
+                data-ocid="dashboard.transactions.loading_state"
+              >
                 <Skeleton className="h-16 w-full rounded-xl" />
                 <Skeleton className="h-16 w-full rounded-xl" />
                 <Skeleton className="h-16 w-full rounded-xl" />
               </div>
             ) : recentTransactions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="mb-3 rounded-2xl bg-muted p-4">
+              <div
+                data-ocid="dashboard.transactions.empty_state"
+                className="flex flex-col items-center justify-center py-12 text-center"
+              >
+                <div className="mb-3 rounded-2xl bg-muted/60 p-4">
                   <DollarSign className="h-8 w-8 text-muted-foreground" />
                 </div>
                 <p className="text-sm font-medium text-foreground">
@@ -286,21 +373,27 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="rounded-2xl border border-border bg-card p-5 shadow-card lg:col-span-2"
+            transition={{ delay: 0.28 }}
+            className="bank-card rounded-2xl p-5 lg:col-span-2"
           >
             <h2 className="mb-2 font-display text-lg font-bold text-foreground">
               Spending by Category
             </h2>
-            {analysisLoading || seeding ? (
-              <div className="flex h-[280px] items-center justify-center">
+            {analysisLoading ? (
+              <div
+                className="flex h-[280px] items-center justify-center"
+                data-ocid="dashboard.chart.loading_state"
+              >
                 <LoadingSpinner size="lg" label="Loading chart..." />
               </div>
             ) : analysis?.categoryTotals?.length ? (
               <ExpenseChart data={analysis.categoryTotals} />
             ) : (
-              <div className="flex h-[280px] flex-col items-center justify-center text-center">
-                <div className="mb-3 rounded-2xl bg-muted p-4">
+              <div
+                className="flex h-[280px] flex-col items-center justify-center text-center"
+                data-ocid="dashboard.chart.empty_state"
+              >
+                <div className="mb-3 rounded-2xl bg-muted/60 p-4">
                   <TrendingUp className="h-8 w-8 text-muted-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -316,8 +409,8 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-5 shadow-card"
+            transition={{ delay: 0.32 }}
+            className="mt-6 rounded-2xl border border-primary/25 bg-primary/6 p-5 shadow-bank"
           >
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
@@ -335,7 +428,8 @@ export default function DashboardPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-2 border-primary/40 text-primary hover:bg-primary/10"
+                  data-ocid="dashboard.wallet.button"
+                  className="gap-2 border-primary/35 text-primary hover:bg-primary/8"
                 >
                   <Wallet className="h-4 w-4" />
                   View Wallet
@@ -358,14 +452,16 @@ export default function DashboardPage() {
                 </span>
               </div>
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
-                <div
-                  className="h-full rounded-full bg-primary transition-all duration-700"
-                  style={{
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{
                     width:
                       wallet.totalRoundup > 0
                         ? `${(wallet.investedAmount / wallet.totalRoundup) * 100}%`
                         : "0%",
                   }}
+                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+                  className="h-full rounded-full bg-primary"
                 />
               </div>
             </div>

@@ -14,43 +14,43 @@ const categoryConfig: Record<
   { color: string; bg: string; border: string }
 > = {
   Food: {
-    color: "text-orange-300",
-    bg: "bg-orange-500/15",
-    border: "border-orange-500/30",
+    color: "text-orange-700",
+    bg: "bg-orange-50",
+    border: "border-orange-200",
   },
   Transport: {
-    color: "text-blue-300",
-    bg: "bg-blue-500/15",
-    border: "border-blue-500/30",
+    color: "text-blue-700",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
   },
   Shopping: {
-    color: "text-purple-300",
-    bg: "bg-purple-500/15",
-    border: "border-purple-500/30",
+    color: "text-purple-700",
+    bg: "bg-purple-50",
+    border: "border-purple-200",
   },
   Entertainment: {
-    color: "text-pink-300",
-    bg: "bg-pink-500/15",
-    border: "border-pink-500/30",
+    color: "text-pink-700",
+    bg: "bg-pink-50",
+    border: "border-pink-200",
   },
   Utilities: {
-    color: "text-yellow-300",
-    bg: "bg-yellow-500/15",
-    border: "border-yellow-500/30",
+    color: "text-yellow-700",
+    bg: "bg-yellow-50",
+    border: "border-yellow-200",
   },
   Other: {
-    color: "text-slate-300",
-    bg: "bg-slate-500/15",
-    border: "border-slate-500/30",
+    color: "text-slate-600",
+    bg: "bg-slate-100",
+    border: "border-slate-200",
   },
 };
 
 function getCategoryConfig(category: string) {
   return (
     categoryConfig[category] ?? {
-      color: "text-slate-300",
-      bg: "bg-slate-500/15",
-      border: "border-slate-500/30",
+      color: "text-slate-600",
+      bg: "bg-slate-100",
+      border: "border-slate-200",
     }
   );
 }

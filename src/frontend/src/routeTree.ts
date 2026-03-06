@@ -9,6 +9,9 @@ import DashboardPage from "./pages/DashboardPage";
 import InsightsPage from "./pages/InsightsPage";
 import InvestmentsPage from "./pages/InvestmentsPage";
 import LandingPage from "./pages/LandingPage";
+import LoanEligibilityPage from "./pages/LoanEligibilityPage";
+import PaymentsPage from "./pages/PaymentsPage";
+import SubscriptionsPage from "./pages/SubscriptionsPage";
 
 const rootRoute = createRootRoute({ component: RootLayout });
 
@@ -42,12 +45,33 @@ const investmentsRoute = createRoute({
   component: InvestmentsPage,
 });
 
+const loanRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/loan",
+  component: LoanEligibilityPage,
+});
+
+const subscriptionsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/subscriptions",
+  component: SubscriptionsPage,
+});
+
+const paymentsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/payments",
+  component: PaymentsPage,
+});
+
 export const routeTree = rootRoute.addChildren([
   landingRoute,
   dashboardRoute,
   addTransactionRoute,
   insightsRoute,
   investmentsRoute,
+  loanRoute,
+  subscriptionsRoute,
+  paymentsRoute,
 ]);
 
 export type Router = ReturnType<typeof createRouter<typeof routeTree>>;

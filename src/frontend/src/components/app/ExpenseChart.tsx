@@ -72,7 +72,7 @@ export default function ExpenseChart({ data }: ExpenseChartProps) {
             <Cell
               key={`cell-${entry.name}`}
               fill={entry.fill}
-              stroke="oklch(0.11 0.025 258)"
+              stroke="#ffffff"
               strokeWidth={2}
             />
           ))}
@@ -80,9 +80,7 @@ export default function ExpenseChart({ data }: ExpenseChartProps) {
         <Tooltip content={<CustomTooltip />} />
         <Legend
           formatter={(value) => (
-            <span style={{ color: "oklch(0.75 0.02 258)", fontSize: "12px" }}>
-              {value}
-            </span>
+            <span style={{ color: "#475569", fontSize: "12px" }}>{value}</span>
           )}
           iconType="circle"
         />

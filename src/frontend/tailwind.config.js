@@ -22,8 +22,8 @@ export default {
       },
       colors: {
         finrizz: {
-          navy: "oklch(var(--finrizz-navy))",
-          "navy-mid": "oklch(var(--finrizz-navy-mid))",
+          bg: "oklch(var(--finrizz-bg))",
+          surface: "oklch(var(--finrizz-surface))",
           teal: "oklch(var(--finrizz-teal))",
           "teal-bright": "oklch(var(--finrizz-teal-bright))",
         },
@@ -83,12 +83,13 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      boxShadow: {
-        xs: "0 1px 2px 0 rgba(0,0,0,0.05)",
-        card: "0 4px 24px 0 rgba(0,0,0,0.4), 0 1px 4px 0 rgba(0,0,0,0.3)",
-        "card-hover": "0 8px 32px 0 rgba(0,0,0,0.5), 0 2px 8px 0 rgba(0,0,0,0.4)",
-        teal: "0 0 20px oklch(0.62 0.15 185 / 0.3)",
-        "teal-lg": "0 0 40px oklch(0.62 0.15 185 / 0.25), 0 0 80px oklch(0.62 0.15 185 / 0.1)",
+        boxShadow: {
+        xs: "0 1px 2px 0 rgba(0,0,0,0.04)",
+        bank: "0 1px 4px oklch(0 0 0 / 0.06), 0 4px 16px oklch(0 0 0 / 0.05)",
+        card: "0 1px 4px oklch(0 0 0 / 0.06), 0 4px 16px oklch(0 0 0 / 0.05)",
+        "card-hover": "0 4px 20px oklch(0 0 0 / 0.10), 0 1px 6px oklch(0 0 0 / 0.06)",
+        teal: "0 4px 14px oklch(0.52 0.13 220 / 0.30)",
+        "teal-lg": "0 6px 24px oklch(0.52 0.13 220 / 0.25)",
       },
       keyframes: {
         "accordion-down": {
